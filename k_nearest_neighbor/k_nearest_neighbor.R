@@ -58,7 +58,7 @@ library(class)
 
 set.seed(101)
 
-predicted.purchase = knn(train.data, test.data, train.purchase, k=1)
+predicted.purchase = knn(train.data, test.data, train.purchase, k=3)
 
 head(predicted.purchase)
 
@@ -68,5 +68,20 @@ misclass.error = mean(test.purchase != predicted.purchase)
 print(misclass.error)
 
 # choosing a k value (with elbow method)
+predicted.purchase = NULL
+error.rate = NULL
 
+for (i in 1:20) {
+  set.seed(101)
+  predicted.purchase = knn(train.data,test.data,train.purchase,k=i)
+  error.rate[i] = mean(test.purchase != predicted.purchase)
+}
 
+print(error.rate)
+
+# elbow plot
+k.values = 1:20
+error.df = data.frame(error.rate,k.values)
+
+ggplot(error.df,aes(k.values,error.rate)) + geom_point() + geom_line(lty='dotted',color='red')
+# elbow at k = 9
